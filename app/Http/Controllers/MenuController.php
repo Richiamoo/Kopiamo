@@ -39,6 +39,12 @@ class MenuController extends Controller
      */
     public function create()
     {
+        if(Auth::user()->name === 'admin'){
+            return view('menu.create');
+        }else{
+            alert()->error('Access Denied!','You cannot access this page!')->autoClose(4000);
+            return redirect()->route('menu.index');
+        }
         return view('menu.create');
     }
 
