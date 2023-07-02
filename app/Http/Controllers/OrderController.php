@@ -38,39 +38,76 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request)
+    // {
+    //     $order = new Order();
+    //     $order->user_id = auth()->id();
+    //     $order->fullname = $request->input('fullName');
+    //     $order->email = $request->input('Email');
+    //     $order->phone = $request->input('phoneNumber');
+    //     $order->notes = $request->input('note');
+    //     $order->orderStatus = 'Pending';
+    //     $order->totalPrice = $request->input('total');
+    //     $order->paymentType = 'Cash on pick up';
+    //     $order->paymentStatus = '0';
+    //     $order->save();
+
+    //     if($request->input('ordertype') == 'cart'){
+    //         foreach (Cart::content() as $item){
+    //             OrderItem::create([
+    //                 'order_id'  =>  $order->id,
+    //                 'prod_id'   =>  $item->id,
+    //                 'price'     =>  $item->priceTotal(),
+    //                 'qty'       =>  $item->qty,
+    //             ]);
+    //         }
+    //     }else{
+    //         OrderItem::create([
+    //             'order_id'  =>  $order->id,
+    //             'prod_id'   =>  $request->input('prodID'),
+    //             'price'     =>  $request->input('itemprice'),
+    //             'qty'       =>  $request->input('qty'),
+    //         ]);
+    //     }
+        
+
+    //     return redirect()->route('order.index')->with('success', 'Order placed successfully!');
+    // }
     public function store(Request $request)
     {
         $order = new Order();
         $order->user_id = auth()->id();
-        $order->fullname = $request->input('fullName');
-        $order->email = $request->input('Email');
-        $order->phone = $request->input('phoneNumber');
+        
+        $user = auth()->user(); // Get the authenticated user
+        
+        // Set the user data using the Order model's setUserData method
+        $order->setUserData($user);
+        
         $order->notes = $request->input('note');
         $order->orderStatus = 'Pending';
         $order->totalPrice = $request->input('total');
         $order->paymentType = 'Cash on pick up';
         $order->paymentStatus = '0';
         $order->save();
-
-        if($request->input('ordertype') == 'cart'){
-            foreach (Cart::content() as $item){
+    
+        if ($request->input('ordertype') == 'cart') {
+            foreach (Cart::content() as $item) {
                 OrderItem::create([
-                    'order_id'  =>  $order->id,
-                    'prod_id'   =>  $item->id,
-                    'price'     =>  $item->priceTotal(),
-                    'qty'       =>  $item->qty,
+                    'order_id' => $order->id,
+                    'prod_id' => $item->id,
+                    'price' => $item->priceTotal(),
+                    'qty' => $item->qty,
                 ]);
             }
-        }else{
+        } else {
             OrderItem::create([
-                'order_id'  =>  $order->id,
-                'prod_id'   =>  $request->input('prodID'),
-                'price'     =>  $request->input('itemprice'),
-                'qty'       =>  $request->input('qty'),
+                'order_id' => $order->id,
+                'prod_id' => $request->input('prodID'),
+                'price' => $request->input('itemprice'),
+                'qty' => $request->input('qty'),
             ]);
         }
-        
-
+    
         return redirect()->route('order.index')->with('success', 'Order placed successfully!');
     }
 

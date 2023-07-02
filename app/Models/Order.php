@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\OrderItem;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,15 +17,18 @@ class Order extends Model
     
     protected $fillable = [
         'user_id',
-        'fullname',
-        'email',
-        'phone',
         'notes',
         'orderStatus',
         'totalPrice',
         'paymentType',
         'paymentStatus',
     ];
+
+    public function setUserData(User $user) {
+        $this->fullname = $user->name;
+        $this->email = $user->email;
+        $this->phone = $user->phonenum;
+    }
 
     public function menu() : BelongsToMany{
         return $this->belongsToMany(Menu::class);
