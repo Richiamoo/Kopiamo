@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Http\Controllers\Controller;
-use App\Models\Menu;
 use App\Models\OrderItem;
-use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -29,13 +27,13 @@ class OrderController extends Controller
      */
     public function create()
     {
- 
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     // public function store(Request $request)
@@ -69,7 +67,6 @@ class OrderController extends Controller
     //             'qty'       =>  $request->input('qty'),
     //         ]);
     //     }
-        
 
     //     return redirect()->route('order.index')->with('success', 'Order placed successfully!');
     // }
@@ -77,20 +74,20 @@ class OrderController extends Controller
     {
         $order = new Order();
         $order->user_id = auth()->id();
-        
+
         $user = auth()->user(); // Get the authenticated user
-        
+
         // Set the user data using the Order model's setUserData method
         $order->setUserData($user);
-        
+
         $order->notes = $request->input('note');
         $order->orderStatus = 'Pending';
         $order->totalPrice = $request->input('total');
         $order->paymentType = 'Cash on pick up';
         $order->paymentStatus = '0';
         $order->save();
-    
-        if ($request->input('ordertype') == 'cart') {
+
+        if ($request->input('ordertype') === 'cart') {
             foreach (Cart::content() as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -107,7 +104,7 @@ class OrderController extends Controller
                 'qty' => $request->input('qty'),
             ]);
         }
-    
+
         return redirect()->route('order.index')->with('success', 'Order placed successfully!');
     }
 
@@ -115,17 +112,18 @@ class OrderController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Order  $order
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Order $order)
     {
-        //
+        
     }
 
     public function show($id, Request $request)
     {
         Order::where('id', $id)->update([
-            'orderStatus'   =>  $request->input('status'),
+            'orderStatus' => $request->input('status'),
         ]);
         return redirect()->route('order.index');
     }
@@ -135,22 +133,24 @@ class OrderController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Order  $order
+     *
      * @return \Illuminate\Http\Response
      */
     public function update($id)
     {
-        //
+        
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Order  $order
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Order $order)
     {
-        //
+        
     }
 
     public function details($orderid)
@@ -158,8 +158,8 @@ class OrderController extends Controller
         $orders = Order::where('id', $orderid)->get();
         $orderitems = OrderItem::where('order_id', $orderid)->get();
         return view('order.details')->with([
-            'orders'        =>  $orders,
-            'orderitems'    =>  $orderitems
+            'orders' => $orders,
+            'orderitems' => $orderitems,
         ]);
     }
 
@@ -177,25 +177,24 @@ class OrderController extends Controller
         $order->paymentStatus = '1';
         $order->save();
 
-        if($request->input('ordertype') == 'cart'){
-            foreach (Cart::content() as $item){
+        if ($request->input('ordertype') === 'cart') {
+            foreach (Cart::content() as $item) {
                 OrderItem::create([
-                    'order_id'  =>  $order->id,
-                    'prod_id'   =>  $item->id,
-                    'price'     =>  $item->priceTotal(),
-                    'qty'       =>  $item->qty,
+                    'order_id' => $order->id,
+                    'prod_id' => $item->id,
+                    'price' => $item->priceTotal(),
+                    'qty' => $item->qty,
                 ]);
             }
-        }else{
+        } else {
             OrderItem::create([
-                'order_id'  =>  $order->id,
-                'prod_id'   =>  $request['prodID'],
-                'price'     =>  $request['itemprice'],
-                'qty'       =>  $request['qty'],
+                'order_id' => $order->id,
+                'prod_id' => $request['prodID'],
+                'price' => $request['itemprice'],
+                'qty' => $request['qty'],
             ]);
         }
 
-        return response()->json(['status'=>"Order placed successfully!"]);
+        return response()->json(['status' => 'Order placed successfully!']);
     }
-
 }

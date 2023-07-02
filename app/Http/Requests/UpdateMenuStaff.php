@@ -24,7 +24,7 @@ class UpdateMenuStaff extends FormRequest
     public function rules()
     {
         return [
-            //
+
         ];
     }
 }

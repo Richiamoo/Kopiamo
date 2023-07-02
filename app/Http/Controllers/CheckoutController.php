@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Order;
+use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
@@ -20,21 +19,22 @@ class CheckoutController extends Controller
         $orders = Order::with('user')->get();
         return view('order.checkout')->with([
             'menus' => $menus,
-            'orders' => $orders
+            'orders' => $orders,
         ]);
     }
 
-    public function pagetocheckout(Request $request){
-        //Source of page 
+    public function pagetocheckout(Request $request)
+    {
+        //Source of page
         $source = $request->input('from');
-        if($source == 'cartpage'){
+        if ($source === 'cartpage') {
             // return $this->index()->with('fromCart', 'Items from cart');
             return redirect()->route('checkout.index')->with('fromCart', 'Items from cart');
+        }
 
-        }
-        else{
             // return redirect()->route('menu.index')->with('fromBuyNow', 'Items from menu');
-            echo $source;
-        }
+        echo $source;
+
+    
     }
 }

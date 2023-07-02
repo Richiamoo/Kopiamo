@@ -3,11 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class StoreMenuStaff extends FormRequest
 {
-        /**
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -25,7 +24,7 @@ class StoreMenuStaff extends FormRequest
                 'required', 'string',
             ],
             'price' => [
-                'required', 'numeric'
+                'required', 'numeric',
             ],
         ];
     }
@@ -38,6 +37,4 @@ class StoreMenuStaff extends FormRequest
     {
         return true;
     }
-
-
 }

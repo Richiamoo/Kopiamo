@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Menu;
+use Illuminate\Http\Request;
 
 class MenuController extends Controller
 {
@@ -16,20 +15,20 @@ class MenuController extends Controller
     public function index()
     {
         $menus = Menu::all();
-        return view('menu.index',compact('menus'));
+        return view('menu.index', compact('menus'));
     }
 
-     /**
+    /**
      * Display a listing of the searched resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function search()
     {
-        $search=$_GET['search'];
-        $menus=Menu::where('menuName','LIKE','%'.$search.'%')->get();
+        $search = $_GET['search'];
+        $menus = Menu::where('menuName', 'LIKE', '%'.$search.'%')->get();
 
-        return view('menu.search',compact('menus'));
+        return view('menu.search', compact('menus'));
     }
 
     /**
@@ -39,12 +38,12 @@ class MenuController extends Controller
      */
     public function create()
     {
-        if(Auth::user()->name === 'admin'){
+        if (Auth::user()->name === 'admin') {
             return view('menu.create');
-        }else{
-            alert()->error('Access Denied!','You cannot access this page!')->autoClose(4000);
-            return redirect()->route('menu.index');
         }
+        alert()->error('Access Denied!', 'You cannot access this page!')->autoClose(4000);
+        return redirect()->route('menu.index');
+
         return view('menu.create');
     }
 
@@ -52,6 +51,7 @@ class MenuController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -70,18 +70,16 @@ class MenuController extends Controller
             $file->move('uploads/students/', $filename);
             'coffee_photo_path' => $filename;
         },
-            
-         
+
+
         ]);*/
-        $menu = new Menu;
+        $menu = new Menu();
         $menu->menuName = $request->input('menuName');
         $menu->menuDesc = $request->input('menuDesc');
         $menu->menuType = $request->input('menuType');
         $menu->menuPrice = $request->input('menuPrice');
-        
 
-        if($request->hasfile('coffee_photo_path'))
-        {
+        if ($request->hasfile('coffee_photo_path')) {
             $file = $request->file('coffee_photo_path');
             $extension = $file->getClientOriginalExtension();
             $filename = time().'.'.$extension;
@@ -90,7 +88,7 @@ class MenuController extends Controller
         }
 
         $menu->save();
-        alert()->success('Success!','Menu successfully added!')->autoClose(2000);
+        alert()->success('Success!', 'Menu successfully added!')->autoClose(2000);
 
         return redirect()->route('menu.index');
     }
@@ -99,24 +97,24 @@ class MenuController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Menu $menu)
     {
-        
-        
-        return view('menu.edit',compact('menu'));
+        return view('menu.edit', compact('menu'));
     }
 
     /**
@@ -124,32 +122,31 @@ class MenuController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $menu = Menu::find($id);
-       /* request()->validate([
-            'menuName' => 'required',
-            'menuDesc' => 'required',
-            'menuType' => 'required',
-            'menuPrice' => 'required',
-        ]);
+        /* request()->validate([
+             'menuName' => 'required',
+             'menuDesc' => 'required',
+             'menuType' => 'required',
+             'menuPrice' => 'required',
+         ]);
 
-        $menu->update([
-            'menuName' => request('menuName'),
-            'menuDesc' => request('menuDesc'),
-            'menuType' => request('menuType'),
-            'menuPrice' => request('menuPrice'),
-        ]);*/
+         $menu->update([
+             'menuName' => request('menuName'),
+             'menuDesc' => request('menuDesc'),
+             'menuType' => request('menuType'),
+             'menuPrice' => request('menuPrice'),
+         ]);*/
         $menu->menuName = $request->input('menuName');
         $menu->menuDesc = $request->input('menuDesc');
         $menu->menuType = $request->input('menuType');
         $menu->menuPrice = $request->input('menuPrice');
-        
 
-        if($request->hasfile('coffee_photo_path'))
-        {
+        if ($request->hasfile('coffee_photo_path')) {
             $file = $request->file('coffee_photo_path');
             $extension = $file->getClientOriginalExtension();
             $filename = time().'.'.$extension;
@@ -158,8 +155,7 @@ class MenuController extends Controller
         }
 
         $menu->save();
-        alert()->success('Success!','Menu successfully edited!')->autoClose(2000);
-
+        alert()->success('Success!', 'Menu successfully edited!')->autoClose(2000);
 
         return redirect()->route('menu.index');
     }
@@ -168,12 +164,12 @@ class MenuController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Menu $menu)
     {
         $menu->delete();
         return redirect()->route('menu.index');
-
     }
 }

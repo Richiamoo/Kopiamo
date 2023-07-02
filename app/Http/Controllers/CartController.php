@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use RealRashid\SweetAlert\Facades\Alert;
-use Gloudemans\Shoppingcart\Facades\Cart;
-use App\Http\Controllers\Controller;
 use App\Models\Menu;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         // Cart::store(auth()->id());
         $carts = Cart::content();
         $menus = Menu::all();
-        return view('cart.index', compact('carts','menus'));
+        return view('cart.index', compact('carts', 'menus'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $menus = Menu::findOrFail($request->input('menu_id'));
 
         Cart::add(
@@ -31,22 +31,21 @@ class CartController extends Controller
 
         Cart::store(auth()->id());
 
-        alert()->success('Success!','Item successfully added to the cart')->autoClose(2000);
-        
+        alert()->success('Success!', 'Item successfully added to the cart')->autoClose(2000);
+
         return redirect()->route('menu.index');
     }
 
-    public function destroy($cart){
-
+    public function destroy($cart)
+    {
         Cart::remove($cart);
         Cart::store(auth()->id());
-        
-        return redirect()->route('cart.index');
 
+        return redirect()->route('cart.index');
     }
 
-    public function update(Request $request, $id){
-        
+    public function update(Request $request, $id)
+    {
         Cart::update($id, $request->input('cart_qty'));
         Cart::store(auth()->id());
         return $this->index();

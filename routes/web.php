@@ -1,15 +1,14 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\AboutUsController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReviewController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,9 +29,8 @@ Route::get('/', function () {
 
 // Route::resource('menu', \App\Http\Controllers\MenuController::class);
 
-
 // Group everything into one middleware
-Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('menu', MenuController::class);
     Route::get('add-review/{orderid}', [ReviewController::class, 'addreview']);
@@ -49,6 +47,4 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
     Route::resource('checkout', CheckoutController::class);
     Route::put('/cart-checkout', [CheckoutController::class, 'pagetocheckout'])->name('checkout.pagetocheckout');
     Route::get('report', [ReportController::class, 'index'])->name('report');
-    
-
 });
